@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PaganDatingModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="PaganDatingModelStoreContainer">
+    <EntitySet Name="UserSet" EntityType="PaganDatingModel.Store.UserSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MessageSet" EntityType="PaganDatingModel.Store.MessageSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="FriendshipsSet" EntityType="PaganDatingModel.Store.FriendshipsSet" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="UserMessage" Association="PaganDatingModel.Store.UserMessage">
+      <End Role="User" EntitySet="UserSet" />
+      <End Role="Message" EntitySet="MessageSet" />
+    </AssociationSet>
+    <AssociationSet Name="MessageUser" Association="PaganDatingModel.Store.MessageUser">
+      <End Role="Message" EntitySet="MessageSet" />
+      <End Role="User" EntitySet="UserSet" />
+    </AssociationSet>
+    <AssociationSet Name="UserFriends" Association="PaganDatingModel.Store.UserFriends">
+      <End Role="User" EntitySet="UserSet" />
+      <End Role="Friends" EntitySet="FriendshipsSet" />
+    </AssociationSet>
+    <AssociationSet Name="FriendsUser" Association="PaganDatingModel.Store.FriendsUser">
+      <End Role="Friends" EntitySet="FriendshipsSet" />
+      <End Role="User" EntitySet="UserSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="UserSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ProfileImage" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MessageSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Author_Id" Type="int" Nullable="false" />
+    <Property Name="Recipient_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FriendshipsSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequestAccepted" Type="bit" Nullable="false" />
+    <Property Name="User_Id" Type="int" Nullable="false" />
+    <Property Name="Friend_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="UserMessage">
+    <End Role="User" Type="PaganDatingModel.Store.UserSet" Multiplicity="1" />
+    <End Role="Message" Type="PaganDatingModel.Store.MessageSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Message">
+        <PropertyRef Name="Author_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MessageUser">
+    <End Role="Message" Type="PaganDatingModel.Store.MessageSet" Multiplicity="*" />
+    <End Role="User" Type="PaganDatingModel.Store.UserSet" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Message">
+        <PropertyRef Name="Recipient_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserFriends">
+    <End Role="User" Type="PaganDatingModel.Store.UserSet" Multiplicity="1" />
+    <End Role="Friends" Type="PaganDatingModel.Store.FriendshipsSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Friends">
+        <PropertyRef Name="User_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FriendsUser">
+    <End Role="Friends" Type="PaganDatingModel.Store.FriendshipsSet" Multiplicity="*" />
+    <End Role="User" Type="PaganDatingModel.Store.UserSet" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Friends">
+        <PropertyRef Name="Friend_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="PaganDatingModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="PaganDatingModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UserSet" EntityType="PaganDatingModel.User" />
+          <EntitySet Name="MessageSet" EntityType="PaganDatingModel.Message" />
+          <AssociationSet Name="UserMessage" Association="PaganDatingModel.UserMessage">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Message" EntitySet="MessageSet" />
+          </AssociationSet>
+          <AssociationSet Name="MessageUser" Association="PaganDatingModel.MessageUser">
+            <End Role="Message" EntitySet="MessageSet" />
+            <End Role="User" EntitySet="UserSet" />
+          </AssociationSet>
+          <EntitySet Name="FriendshipsSet" EntityType="PaganDatingModel.Friendships" />
+          <AssociationSet Name="UserFriends" Association="PaganDatingModel.UserFriends">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Friends" EntitySet="FriendshipsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FriendsUser" Association="PaganDatingModel.FriendsUser">
+            <End Role="Friends" EntitySet="FriendshipsSet" />
+            <End Role="User" EntitySet="UserSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" />
+          <Property Name="ProfileImage" Type="String" Nullable="false" />
+          <NavigationProperty Name="Outbox" Relationship="PaganDatingModel.UserMessage" FromRole="User" ToRole="Message" />
+          <NavigationProperty Name="Inbox" Relationship="PaganDatingModel.MessageUser" FromRole="User" ToRole="Message" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <NavigationProperty Name="Friends" Relationship="PaganDatingModel.UserFriends" FromRole="User" ToRole="Friends" />
+          <NavigationProperty Name="Friends1" Relationship="PaganDatingModel.FriendsUser" FromRole="User" ToRole="Friends" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Content" Type="String" Nullable="false" />
+          <NavigationProperty Name="Author" Relationship="PaganDatingModel.UserMessage" FromRole="Message" ToRole="User" />
+          <NavigationProperty Name="Recipient" Relationship="PaganDatingModel.MessageUser" FromRole="Message" ToRole="User" />
+        </EntityType>
+        <Association Name="UserMessage">
+          <End Type="PaganDatingModel.User" Role="User" Multiplicity="1" />
+          <End Type="PaganDatingModel.Message" Role="Message" Multiplicity="*" />
+        </Association>
+        <Association Name="MessageUser">
+          <End Type="PaganDatingModel.Message" Role="Message" Multiplicity="*" />
+          <End Type="PaganDatingModel.User" Role="User" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Friendships">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="User" Relationship="PaganDatingModel.UserFriends" FromRole="Friends" ToRole="User" />
+          <NavigationProperty Name="Friend" Relationship="PaganDatingModel.FriendsUser" FromRole="Friends" ToRole="User" />
+          <Property Name="RequestAccepted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="UserFriends">
+          <End Type="PaganDatingModel.User" Role="User" Multiplicity="1" />
+          <End Type="PaganDatingModel.Friendships" Role="Friends" Multiplicity="*" />
+        </Association>
+        <Association Name="FriendsUser">
+          <End Type="PaganDatingModel.Friendships" Role="Friends" Multiplicity="*" />
+          <End Type="PaganDatingModel.User" Role="User" Multiplicity="1" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PaganDatingModelStoreContainer" CdmEntityContainer="PaganDatingModelContainer">
+    <EntitySetMapping Name="UserSet">
+      <EntityTypeMapping TypeName="IsTypeOf(PaganDatingModel.User)">
+        <MappingFragment StoreEntitySet="UserSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="ProfileImage" ColumnName="ProfileImage" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MessageSet">
+      <EntityTypeMapping TypeName="IsTypeOf(PaganDatingModel.Message)">
+        <MappingFragment StoreEntitySet="MessageSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FriendshipsSet">
+      <EntityTypeMapping TypeName="IsTypeOf(PaganDatingModel.Friendships)">
+        <MappingFragment StoreEntitySet="FriendshipsSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RequestAccepted" ColumnName="RequestAccepted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="UserMessage" TypeName="PaganDatingModel.UserMessage" StoreEntitySet="MessageSet">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="Author_Id" />
+      </EndProperty>
+      <EndProperty Name="Message">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="MessageUser" TypeName="PaganDatingModel.MessageUser" StoreEntitySet="MessageSet">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="Recipient_Id" />
+      </EndProperty>
+      <EndProperty Name="Message">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserFriends" TypeName="PaganDatingModel.UserFriends" StoreEntitySet="FriendshipsSet">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="User_Id" />
+      </EndProperty>
+      <EndProperty Name="Friends">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FriendsUser" TypeName="PaganDatingModel.FriendsUser" StoreEntitySet="FriendshipsSet">
+      <EndProperty Name="User">
+        <ScalarProperty Name="Id" ColumnName="Friend_Id" />
+      </EndProperty>
+      <EndProperty Name="Friends">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
