@@ -1,48 +1,42 @@
 ﻿@model DataLayer.User
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Name;
+    ViewBag.Image = Model.ProfileImage;
+    List<DataLayer.Message> messages = ViewBag.Messages;
 }
 
-<h2>Details</h2>
+<h2>@ViewBag.Title</h2>
 
 <div>
-    <h4>User</h4>
+    <h4></h4>
     <hr />
+    <img class="profile" src=@ViewBag.Image alt="Alternate Text" width="250" height="250" />
+    <h4>
+        @Html.DisplayNameFor(model => model.Description)
+    </h4>
+
+    <p>
+        @Html.DisplayFor(model => model.Description)
+    </p>
+
+    <h4>Messages</h4>
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+        @foreach (DataLayer.Message message in messages)
+        {
+            <dt>
+                @message.Author.Name
+                @*@Html.DisplayNameFor(model => model.Name)
+                To do: Change code to display message sender*@
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+            <dd>
+                @message.Content
+                @*Html.DisplayFor(model => model.Name)
+                To do: Change code to display message content*@
+            </dd>
+        }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ProfileImage)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ProfileImage)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-    </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
