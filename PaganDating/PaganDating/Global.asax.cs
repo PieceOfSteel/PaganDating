@@ -12,11 +12,12 @@ namespace PaganDating
     {
         protected void Application_Start()
         {
+
+            System.Web.Http.GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            System.Web.Http.GlobalConfiguration.Configure(WebApiConfig.Register); 
         }
     }
 }

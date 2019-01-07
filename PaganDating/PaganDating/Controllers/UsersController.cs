@@ -32,18 +32,7 @@ namespace PaganDating.Controllers
             {
                 return HttpNotFound();
             }
-
-            List<Message> messages = db.MessageSet.ToList();
-            List<Message> userMessages = new List<Message>();
-
-            foreach (Message message in messages)
-            {
-                if(message.Recipient.Id == user.Id)
-                {
-                    userMessages.Add(message);
-                }
-            }
-            ViewBag.Messages = userMessages;
+            
             return View(user);
         }
 

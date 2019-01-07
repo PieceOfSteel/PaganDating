@@ -2,8 +2,8 @@
 
 @{
     ViewBag.Title = Model.Name;
-    ViewBag.Image = Model.ProfileImage;
-    List<DataLayer.Message> messages = ViewBag.Messages;
+    var image = Model.ProfileImage;
+    var messages = Model.Inbox.ToList();
 }
 
 <h2>@ViewBag.Title</h2>
@@ -11,7 +11,7 @@
 <div>
     <h4></h4>
     <hr />
-    <img class="profile" src=@ViewBag.Image alt="Alternate Text" width="250" height="250" />
+    <img class="profile" src=@image alt="Alternate Text" width="250" height="250" />
     <h4>
         @Html.DisplayNameFor(model => model.Description)
     </h4>
@@ -26,18 +26,30 @@
         {
             <dt>
                 @message.Author.Name
-                @*@Html.DisplayNameFor(model => model.Name)
-                To do: Change code to display message sender*@
             </dt>
 
             <dd>
                 @message.Content
-                @*Html.DisplayFor(model => model.Name)
-                To do: Change code to display message content*@
             </dd>
         }
+    </dl> 
+    <h4>Friends</h4>
+    <dl id="friendlist" class ="dl-horizontal">
+        
     </dl>
+    <h4>Friend requests</h4>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var friends = $.get('api/friendships/getFriends?userId=' + @Model.Id);
+            friends.forEach(function (friend) {
+                $('#friendlist').append(friend);
+            })
+        }
+    </script>
+    }
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
