@@ -7,39 +7,44 @@
 <h2>sendMessage</h2>
 
 
-@using (Html.BeginForm()) 
-{
+
+
+<form id="message-form">
     @Html.AntiForgeryToken()
-    
     <div class="form-horizontal">
         <h4>Message</h4>
         <hr />
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+                <input type="text" id="content" class="form-control" required />
+                @*@Html.EditorFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })*@
             </div>
             @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Author.Id, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Author.Id, "", new { @class = "text-danger" })
+                <input type="text" id="author" class="form-control" required />
+                @*@Html.EditorFor(model => model.Author.Id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Author.Id, "", new { @class = "text-danger" })*@
             </div>
             @Html.LabelFor(model => model.Recipient, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Recipient.Id, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Recipient.Id, "", new { @class = "text-danger" })
+                <input type="text" id="recipient" class="form-control" required />
+                @*@Html.EditorFor(model => model.Recipient.Id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Recipient.Id, "", new { @class = "text-danger" })*@
             </div>
         </div>
 
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <button type="submit" class="btn btn-default">Send</button>
             </div>
         </div>
     </div>
-}
+</form>
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -47,4 +52,23 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+        $('#message-form').submit(function (ev) {
+            ev.preventDefault();
+            var content = $('#content').val();
+            var author = $('#author').val();
+            var recipient = $('#recipient').val();
+
+            $.get('/api/messages/create?' +
+                'content=' + content +
+                '&author=' + author +
+                '&recipient=' + recipient,
+                function () {
+                    window.location.reload();
+                }
+            );
+        });
+    </script>
+
 }

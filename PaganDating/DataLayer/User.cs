@@ -19,8 +19,8 @@ namespace DataLayer
         {
             this.Outbox = new HashSet<Message>();
             this.Inbox = new HashSet<Message>();
-            this.Friends = new HashSet<Friendships>(); //My Friends
-            this.Friends1 = new HashSet<Friendships>(); //People who are friends with me?
+            this.Friends = new HashSet<Friendships>(); //Friendships where I am the user.
+            this.Friends1 = new HashSet<Friendships>(); //Friendships where I am the friend.
         }
     
         public int Id { get; set; }
