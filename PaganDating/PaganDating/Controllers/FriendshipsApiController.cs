@@ -14,7 +14,7 @@ namespace PaganDating.Controllers
 
         [HttpGet]
         [Route("sendRequest")]
-        public void sendRequest(int senderId, int recipientId)
+        public void SendRequest(int senderId, int recipientId)
         {
             
             var request = new Friendships();
@@ -26,28 +26,28 @@ namespace PaganDating.Controllers
             db.FriendshipsSet.Add(request);
             db.SaveChanges();
         }
-
+        
         [HttpGet]
-        [Route("getFriends")]
-        public List<User> getFriends(int userId)
+        [Route("acceptRequest")]
+        public void AcceptRequest(int requesterId, int recipientId)
         {
-            
-            var user = db.UserSet.FirstOrDefault(u => u.Id == userId);
-            var friendships = user.Friends.Where(a => a.RequestAccepted == true).ToList();
-            var friends = friendships.Select(row => row.Friend).ToList();
+            var requester = db.UserSet.FirstOrDefault(r => r.Id == requesterId);
+            var recipient = db.UserSet.FirstOrDefault(r => r.Id == recipientId);
 
-            return friends;
-        }
+            var request = db.FriendshipsSet
+                .Where(a => a.RequestAccepted == false)
+                .Where(f => f.User.Id == requester.Id)
+                .FirstOrDefault(f => f.Friend.Id == recipient.Id);
 
-        [HttpGet]
-        [Route("getRequests")]
-        public List<User> getRequests(int userId)
-        {
-            var user = db.UserSet.FirstOrDefault(u => u.Id == userId);
-            var requestedFriendships = user.Friends1.Where(a => a.RequestAccepted == false).ToList();
-            var requests = requestedFriendships.Select(row => row.User).ToList();
+            request.RequestAccepted = true;
 
-            return requests;
+            var newFriendship = new Friendships();
+            newFriendship.User = recipient;
+            newFriendship.Friend = requester;
+            newFriendship.RequestAccepted = true;
+
+            db.FriendshipsSet.Add(newFriendship);
+            db.SaveChanges();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿@model DataLayer.User
+﻿@model PaganDating.Models.UserDetailsViewModel
 
 @{
-    ViewBag.Title = Model.Name;
-    var image = Model.ProfileImage;
-    var messages = Model.Inbox.ToList();
+    ViewBag.Title = Model.User.Name;
+    var image = Model.User.ProfileImage;
+    var messages = Model.User.Inbox.ToList();
+    var friends = Model.Friends;
+    var requests = Model.Requests;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -13,11 +15,11 @@
     <hr />
     <img class="profile" src=@image alt="Alternate Text" width="250" height="250" />
     <h4>
-        @Html.DisplayNameFor(model => model.Description)
+        @Html.DisplayNameFor(model => model.User.Description)
     </h4>
 
     <p>
-        @Html.DisplayFor(model => model.Description)
+        @Html.DisplayFor(model => model.User.Description)
     </p>
 
     <h4>Messages</h4>
@@ -35,22 +37,46 @@
     </dl> 
     <h4>Friends</h4>
     <dl id="friendlist" class ="dl-horizontal">
-        
+        @foreach (var friend in friends)
+        {
+         <p>
+            @Html.ActionLink(friend.Name, "Details", new { id = friend.Id })
+         </p>
+        }
     </dl>
     <h4>Friend requests</h4>
+    <dl id="requestlist" class="dl-horizontal">
+        @{ 
+            foreach (var request in requests)
+            {
+        <p id="request">
+            @Html.ActionLink(request.Name, "Details", new { id = request.Id })
+            
+            <button data-requester=@request.Id class="accept-request btn btn-default">Accept</button>
+            <button data-requester=@request.Id class="reject-request btn btn-default">Reject</button>
+        </p>
+            }
+        }
+    </dl>
 </div>
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            var friends = $.get('api/friendships/getFriends?userId=' + @Model.Id);
-            friends.forEach(function (friend) {
-                $('#friendlist').append(friend);
-            })
-        }
+        $('.accept-request').click(function () {
+            var requester = $(this).attr('data-requester');
+            var recipient = @Model.User.Id;
+
+            $.get('/api/friendships/acceptRequest?' +
+                'requesterId=' + requester +
+                '&recipientId=' + recipient,
+                function () {
+                    window.location.reload();
+                }
+            );
+        });
     </script>
     }
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

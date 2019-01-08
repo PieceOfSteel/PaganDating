@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DataLayer;
+using PaganDating.Models;
 
 namespace PaganDating.Controllers
 {
@@ -23,17 +24,19 @@ namespace PaganDating.Controllers
         // GET: Users/Details/5
         public ActionResult Details(int? id)
         {
+            var viewModel = new UserDetailsViewModel(db.UserSet.Find(id));
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.UserSet.Find(id);
-            if (user == null)
+           
+            if (viewModel.User == null)
             {
                 return HttpNotFound();
             }
             
-            return View(user);
+            return View(viewModel);
         }
 
         // GET: Users/Create
