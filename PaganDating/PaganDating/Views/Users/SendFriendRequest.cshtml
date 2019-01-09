@@ -1,15 +1,14 @@
 ﻿@model PaganDating.Models.FriendRequestViewModel
 
 @{
-    ViewBag.Title = "Send friend Request";
+    ViewBag.Title = "Send Friend Request";
 }
 
-<h2>sendMessage</h2>
+<h2>Send Friend Request</h2>
 
 <form id="request-form">
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
-        <h4>Friend Request</h4>
         <hr />
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })

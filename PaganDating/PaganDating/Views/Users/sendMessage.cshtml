@@ -1,15 +1,14 @@
 ﻿@model DataLayer.Message
 
 @{
-    ViewBag.Title = "sendMessage";
+    ViewBag.Title = "Message";
 }
 
-<h2>sendMessage</h2>
+<h2>Message</h2>
 
 <form id="message-form">
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
-        <h4>Message</h4>
         <hr />
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })

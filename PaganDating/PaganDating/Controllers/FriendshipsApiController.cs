@@ -41,14 +41,25 @@ namespace PaganDating.Controllers
 
             request.RequestAccepted = true;
 
-            var newFriendship = new Friendships();
-            newFriendship.User = recipient;
-            newFriendship.Friend = requester;
-            newFriendship.RequestAccepted = true;
+            var newFriendship = new Friendships
+            {
+                User = recipient,
+                Friend = requester,
+                RequestAccepted = true
+            };
 
             db.FriendshipsSet.Add(newFriendship);
             db.SaveChanges();
         }
 
+        [HttpGet]
+        [Route("countRequests")]
+        public int CountRequests(int userId)
+        {
+            var user = db.UserSet.FirstOrDefault(u => u.Id == userId);
+            var count = user.Friends1.Where(a => a.RequestAccepted == false).Count();
+
+            return count;
+        }
     }
 }
