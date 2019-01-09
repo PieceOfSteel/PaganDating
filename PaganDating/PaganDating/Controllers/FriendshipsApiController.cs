@@ -14,13 +14,13 @@ namespace PaganDating.Controllers
 
         [HttpGet]
         [Route("sendRequest")]
-        public void SendRequest(int senderId, int recipientId)
+        public void SendRequest(int requesterId, int recipientId)
         {
             
             var request = new Friendships();
 
             request.RequestAccepted = false;
-            request.User = db.UserSet.FirstOrDefault(u => u.Id == senderId);
+            request.User = db.UserSet.FirstOrDefault(u => u.Id == requesterId);
             request.Friend = db.UserSet.FirstOrDefault(f => f.Id == recipientId);
 
             db.FriendshipsSet.Add(request);
@@ -49,5 +49,6 @@ namespace PaganDating.Controllers
             db.FriendshipsSet.Add(newFriendship);
             db.SaveChanges();
         }
+
     }
 }

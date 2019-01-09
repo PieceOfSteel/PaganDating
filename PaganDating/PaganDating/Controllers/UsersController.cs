@@ -16,9 +16,17 @@ namespace PaganDating.Controllers
         private PaganDatingModelContainer db = new PaganDatingModelContainer();
 
         // GET: Users
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Index(string searchString)
         {
-            return View(db.UserSet.ToList());
+            var users = db.UserSet.ToList();
+
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                users = db.UserSet.Where(u => u.Name.Contains(searchString)).ToList();
+            }
+            
+            return View(users);
         }
 
         // GET: Users/Details/5
@@ -45,9 +53,24 @@ namespace PaganDating.Controllers
             return View();
         }
 
-        public ActionResult sendMessage()
+        public ActionResult SendMessage()
         {
             return View();
+        }
+
+        public ActionResult SendFriendRequest(User recipient)
+        {
+            var request = new FriendRequestViewModel();
+            request.Recipient = recipient;
+            return View(request);
+        }
+
+        
+        [HttpGet]
+        public ActionResult Search(string searchString)
+        {
+            var users = db.UserSet.Where(u => u.Name.Contains(searchString));
+            return View(users.ToList());
         }
 
         // POST: Users/Create
