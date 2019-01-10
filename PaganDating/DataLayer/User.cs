@@ -19,15 +19,15 @@ namespace DataLayer
         {
             this.Outbox = new HashSet<Message>();
             this.Inbox = new HashSet<Message>();
-            this.Friends = new HashSet<Friendships>(); //Friendships where I am the user.
-            this.Friends1 = new HashSet<Friendships>(); //Friendships where I am the friend.
+            this.Friends = new HashSet<Friendships>();
+            this.Friends1 = new HashSet<Friendships>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Password { get; set; }
-        public string ProfileImage { get; set; } //Path for image file
+        public string ProfileImage { get; set; }
         public string Description { get; set; }
+        public string AccountId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Message> Outbox { get; set; }

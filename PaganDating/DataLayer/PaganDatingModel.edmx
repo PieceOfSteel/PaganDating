@@ -32,9 +32,9 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ProfileImage" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AccountId" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="MessageSet">
     <Key>
@@ -133,13 +133,13 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" />
-          <Property Name="Password" Type="String" Nullable="false" />
           <Property Name="ProfileImage" Type="String" Nullable="false" />
           <NavigationProperty Name="Outbox" Relationship="PaganDatingModel.UserMessage" FromRole="User" ToRole="Message" />
           <NavigationProperty Name="Inbox" Relationship="PaganDatingModel.MessageUser" FromRole="User" ToRole="Message" />
           <Property Name="Description" Type="String" Nullable="false" />
           <NavigationProperty Name="Friends" Relationship="PaganDatingModel.UserFriends" FromRole="User" ToRole="Friends" />
           <NavigationProperty Name="Friends1" Relationship="PaganDatingModel.FriendsUser" FromRole="User" ToRole="Friends" />
+          <Property Name="AccountId" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="Message">
           <Key>
@@ -186,9 +186,9 @@
         <MappingFragment StoreEntitySet="UserSet">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="ProfileImage" ColumnName="ProfileImage" />
           <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

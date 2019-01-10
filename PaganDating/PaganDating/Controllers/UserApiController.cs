@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
+using DataLayer;
 
 namespace PaganDating.Controllers
 {
@@ -12,17 +13,23 @@ namespace PaganDating.Controllers
     {
         [HttpGet]
         [Route("getUserId")]
-        public int GetUserId()
+        public string GetAccountId()
         {
-            var idString = User.Identity.GetUserId();
-            var id = 0;
+            var accountId = User.Identity.GetUserId();
+            
+            return accountId;
+        }
 
-            if (!string.IsNullOrEmpty(idString))
+        public int GetUserId(string accountId)
+        {
+            var userId = 0;
+            if(!string.IsNullOrEmpty(accountId))
             {
-                id = Convert.ToInt32(idString);
+                var db = new PaganDatingModelContainer();
+                userId = db.UserSet.FirstOrDefault(u => u.AccountId == accountId).Id;
             }
-
-            return id;
+ 
+            return userId;
         }
     }
 }

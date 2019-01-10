@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 01/03/2019 12:27:32
--- Generated from EDMX file: C:\Users\ander\Desktop\2019-01-03\PaganDating\DataLayer\PaganDatingModel.edmx
+-- Date Created: 01/10/2019 10:53:36
+-- Generated from EDMX file: C:\Users\ander\source\repos\PaganDating\PaganDating\DataLayer\PaganDatingModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -52,9 +52,9 @@ GO
 CREATE TABLE [dbo].[UserSet] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
-    [Password] nvarchar(max)  NOT NULL,
     [ProfileImage] nvarchar(max)  NOT NULL,
-    [Description] nvarchar(max)  NOT NULL
+    [Description] nvarchar(max)  NOT NULL,
+    [AccountId] nvarchar(max)  NOT NULL
 );
 GO
 

@@ -6,6 +6,10 @@
     <title>@ViewBag.Title - Pagan Dating</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @{
+        var control = new PaganDating.Controllers.UserApiController();
+    }
+
 
 </head>
 <body>
@@ -21,7 +25,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Profile", "Details", "Users", new { id = ViewBag.UserId }, new { })</li>
+                    <li>@Html.ActionLink("Profile", "ProfileRedirect")</li>
                     <li>@Html.ActionLink("Message", "sendMessage", "Users")</li>
                     <li>@Html.ActionLink("Make friends <3 ", "SendFriendRequest", "Users")</li>
                     <li>@Html.ActionLink("Search", "Index", "Users")</li>
@@ -63,6 +67,8 @@
             }
 
             $('.request-count').text(requestCount + ' friend requests');
+
+            
         });
     </script>
 </body>
