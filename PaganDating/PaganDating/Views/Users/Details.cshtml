@@ -6,6 +6,7 @@
     var messages = Model.User.Inbox.ToList();
     var friends = Model.Friends;
     var requests = Model.Requests;
+    var userId = ViewBag.UserId;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -13,7 +14,10 @@
 <div>
     <h4></h4>
     <hr />
+
     <img class="profile" src=@image alt="Image error" width="250" height="250" />
+
+    <hr />
     <h4>
         @Html.DisplayNameFor(model => model.User.Description)
     </h4>
@@ -21,49 +25,97 @@
     <p>
         @Html.DisplayFor(model => model.User.Description)
     </p>
+    <hr />
+    <p>
+        <button class="send-friend-request btn btn-default">Send friend request</button>
+    </p>
+    <hr />
+
+    <p>
+        <textarea class="message-textarea"></textarea>
+    </p>
+    <p>
+        <button class="send-message btn btn-default">Send message</button>
+    </p>
+
+    <hr />
 
     <h4>Messages</h4>
-    <dl class="dl-horizontal">
+    <div class="dl-horizontal">
         @foreach (DataLayer.Message message in messages)
         {
-            <dt>
-                @message.Author.Name
-            </dt>
+            <p>
+                | @message.Author.Name : @message.Content |
+            </p>
 
-            <dd>
-                @message.Content
-            </dd>
+
+
         }
-    </dl> 
+    </div>
+    <hr />
     <h4>Friends</h4>
-    <dl id="friendlist" class ="dl-horizontal">
+    <div id="friendlist" class="dl-horizontal">
         @foreach (var friend in friends)
         {
-         <p>
+
             @Html.ActionLink(friend.Name, "Details", new { id = friend.Id })
-         </p>
+
         }
-    </dl>
-    <h4>Friend requests</h4>
-    <dl id="requestlist" class="dl-horizontal">
-        @{ 
+    </div>
+    <hr />
+    <h4 class="friend-requests">Friend requests</h4>
+    <div id="requestlist" class="dl-horizontal">
+        @{
             foreach (var request in requests)
             {
-        <p id="request">
-            @Html.ActionLink(request.Name, "Details", new { id = request.Id })
-            
-            <button data-requester=@request.Id class="accept-request btn btn-default">Accept</button>
-            <button data-requester=@request.Id class="reject-request btn btn-default">Reject</button>
-        </p>
+                <div id="request">
+                    @Html.ActionLink(request.Name, "Details", new { id = request.Id })
+
+                    <button data-requester=@request.Id class="accept-request btn btn-default">Accept</button>
+                    <button data-requester=@request.Id class="reject-request btn btn-default">Reject</button>
+                </div>
             }
         }
-    </dl>
+    </div>
 </div>
+
+<p class="edit-profile">
+    @Html.ActionLink("Edit profile", "Edit", new { id = Model.User.Id })
+</p>
 
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            var profileOwnerId = @Model.User.Id;
+            var userId = @userId;
+
+            if (profileOwnerId == userId) {
+                $('.send-friend-request').hide();
+            }
+
+            if (profileOwnerId != userId) {
+                $('.friend-requests').hide();
+                $('.accept-request').hide();
+                $('.reject-request').hide();
+                $('.edit-profile').hide();
+            }
+        })
+
+        $('.send-friend-request').click(function () {
+            var requester = @userId;
+            var recipient = @Model.User.Id;
+
+            $.get('/api/friendships/sendRequest?' +
+                'requesterId=' + requester +
+                '&recipientId=' + recipient,
+                function () {
+                    window.location.reload();
+                }
+            );
+        });
+
         $('.accept-request').click(function () {
-            var requester = $(this).attr('data-requester');
+            var requester = @userId;
             var recipient = @Model.User.Id;
 
             $.get('/api/friendships/acceptRequest?' +
@@ -74,9 +126,30 @@
                 }
             );
         });
+
+        $('.reject-request').click(function () {
+            var requester = @userId;
+            var recipient = @Model.User.Id;
+
+            $.get('/api/friendships/rejectRequest?' +
+                'requesterId=' + requester +
+                '&recipientId=' + recipient,
+                function () {
+                    window.location.reload();
+                }
+            );
+        });
+
+        $('.send-message').click(function () {
+            $.get('/api/messages/create?' +
+                'content=' + $('.message-textarea').val() +
+                '&author=' + @userId +
+                '&recipient=' + @Model.User.Id,
+                function () {
+                    window.location.reload();
+                }
+            );
+        });
     </script>
     }
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+

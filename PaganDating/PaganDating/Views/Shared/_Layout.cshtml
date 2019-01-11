@@ -8,6 +8,9 @@
     @Scripts.Render("~/bundles/modernizr")
     @{
         var control = new PaganDating.Controllers.UserApiController();
+        var userId = control.GetUserId();
+        var friendControl = new PaganDating.Controllers.FriendshipsApiController();
+        var requestCount = friendControl.CountRequests(userId);
     }
 
 
@@ -25,11 +28,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Profile", "ProfileRedirect")</li>
-                    <li>@Html.ActionLink("Message", "sendMessage", "Users")</li>
-                    <li>@Html.ActionLink("Make friends <3 ", "SendFriendRequest", "Users")</li>
+                    <li>@Html.ActionLink("Profile", "ProfileRedirect", "Home")</li>
                     <li>@Html.ActionLink("Search", "Index", "Users")</li>
-                    <li class="request-count" id="just-be-visible-please" color="white"></li>
+                    <li class="request-count" id="just-be-visible-please" color="white">@requestCount friend requests</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -47,29 +48,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script>
-
-        function getUserId() {
-            return $.get('/api/user/getUserId');
-        }
-
-        $(document).ready(function () {
-            var userId = getUserId();
-
-            if (userId < 1) {
-                userId = 1;
-            }
-
-            var requestCount = 0;
-            //alert(userId);
-
-            if (userId > 0) {
-                requestCount = $.get('/api/friendships/countRequests?userId=' + userId);
-            }
-
-            $('.request-count').text(requestCount + ' friend requests');
-
-            
-        });
+        
     </script>
 </body>
 </html>

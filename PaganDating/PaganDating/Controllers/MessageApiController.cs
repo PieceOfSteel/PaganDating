@@ -12,7 +12,7 @@ namespace PaganDating.Controllers
     {
         [HttpGet]
         [Route("create")]
-        public void createMessage (string content, int author, int recipient)
+        public void CreateMessage (string content, int author, int recipient)
         {
             var db = new PaganDatingModelContainer();
             var message = new Message();
