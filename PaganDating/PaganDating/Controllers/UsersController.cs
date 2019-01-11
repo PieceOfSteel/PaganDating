@@ -8,12 +8,16 @@ using System.Web;
 using System.Web.Mvc;
 using DataLayer;
 using PaganDating.Models;
+using Microsoft.AspNet.Identity;
+using System.Data.Entity.Validation;
 
 namespace PaganDating.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private PaganDatingModelContainer db = new PaganDatingModelContainer();
+        public UserApiController UserApi = new UserApiController();
 
         // GET: Users
         [HttpGet]
@@ -44,6 +48,8 @@ namespace PaganDating.Controllers
                 return HttpNotFound();
             }
             
+            ViewBag.UserId = UserApi.GetUserId();
+
             return View(viewModel);
         }
 
@@ -110,13 +116,29 @@ namespace PaganDating.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Password,ProfileImage,Description")] User user)
+        [Authorize]
+        public ActionResult Edit([Bind(Include = "Id,Name,ProfileImage,Description,AccountId")] User user)
         {
             if (ModelState.IsValid)
             {
+                if(user.Description == null)
+                {
+                    user.Description = "";
+                }
+                if(user.ProfileImage == null)
+                {
+                    user.ProfileImage = "";
+                }
+
                 db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch
+                {
+                }
+                return RedirectToAction("Details", new { id = user.Id });
             }
             return View(user);
         }
