@@ -14,30 +14,38 @@ namespace PaganDating.Controllers
 
         [HttpGet]
         [Route("sendRequest")]
-        public void SendRequest(int requesterId, int recipientId)
+        public string SendRequest(int requesterId, int recipientId)
         {
             if(requesterId == recipientId)
             {
-                return;
+                return "Already friends/request already sent";
             }
 
             if(GetFriendship(requesterId, recipientId) != null)
             {
                 //Alert: request sent/already friend
-                return;
+                return "Already friends/request already sent";
             }
             else
             {
-                var request = new Friendships();
+                try {
+                    var request = new Friendships();
 
-                request.RequestAccepted = false;
-                request.User = db.UserSet.FirstOrDefault(u => u.Id == requesterId);
-                request.Friend = db.UserSet.FirstOrDefault(f => f.Id == recipientId);
+                    request.RequestAccepted = false;
+                    request.User = db.UserSet.FirstOrDefault(u => u.Id == requesterId);
+                    request.Friend = db.UserSet.FirstOrDefault(f => f.Id == recipientId);
 
-                db.FriendshipsSet.Add(request);
-                db.SaveChanges();
+                    db.FriendshipsSet.Add(request);
+                    db.SaveChanges();
+
+                    return "Request sent";
+                }
+                catch
+                {
+                    return "An error ocurred";
+                }
+                
             }
-
         }
         
         [HttpGet]
@@ -47,10 +55,9 @@ namespace PaganDating.Controllers
             var requester = db.UserSet.FirstOrDefault(r => r.Id == requesterId);
             var recipient = db.UserSet.FirstOrDefault(r => r.Id == recipientId);
 
-            var request = db.FriendshipsSet
+            var request = recipient.Friends1
                 .Where(a => a.RequestAccepted == false)
-                .Where(f => f.User.Id == requester.Id)
-                .FirstOrDefault(f => f.Friend.Id == recipient.Id);
+                .FirstOrDefault(r => r.User.Id == requester.Id);
 
             request.RequestAccepted = true;
 
@@ -110,7 +117,7 @@ namespace PaganDating.Controllers
             }
         }
 
-        private Friendships GetFriendship(int userId, int friendId)
+        public Friendships GetFriendship(int userId, int friendId)
         {
             var friendship = db.FriendshipsSet
                 .Where(f => f.User.Id == userId)

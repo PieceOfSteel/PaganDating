@@ -18,6 +18,7 @@ namespace PaganDating.Controllers
     {
         private PaganDatingModelContainer db = new PaganDatingModelContainer();
         public UserApiController UserApi = new UserApiController();
+        public FriendshipsApiController FriendsApi = new FriendshipsApiController();
 
         // GET: Users
         [HttpGet]
@@ -47,9 +48,16 @@ namespace PaganDating.Controllers
             {
                 return HttpNotFound();
             }
-            
-            ViewBag.UserId = UserApi.GetUserId();
 
+            var userId = UserApi.GetUserId();
+            ViewBag.UserId = userId;
+            
+            if(FriendsApi.GetFriendship(userId, (int)id) != null 
+                || FriendsApi.GetFriendship((int)id, userId) != null)
+            {
+                viewModel.FriendWithProfileOwner = true;
+            }
+            
             return View(viewModel);
         }
 

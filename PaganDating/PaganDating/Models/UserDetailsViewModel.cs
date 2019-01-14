@@ -11,6 +11,7 @@ namespace PaganDating.Models
         public User User { get; set; }
         public List<User> Friends { get; set; }
         public List<User> Requests { get; set; }
+        public bool FriendWithProfileOwner { get; set; }
 
         public UserDetailsViewModel() { }
 
@@ -19,6 +20,7 @@ namespace PaganDating.Models
             User = user;
             UpdateFriends();
             UpdateRequests();
+            FriendWithProfileOwner = false;
         }
 
         public void UpdateFriends()
@@ -46,5 +48,13 @@ namespace PaganDating.Models
             }
             catch { }
         }
+
+        //public void SetProfileFriend(int profileId)
+        //{
+        //    if (Friends.FirstOrDefault(f => f.Id == profileId) == null)
+        //    {
+        //        FriendWithProfileOwner = true;
+        //    }
+        //}
     }
 }

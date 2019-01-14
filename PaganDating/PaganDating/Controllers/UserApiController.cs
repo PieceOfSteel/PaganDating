@@ -42,8 +42,12 @@ namespace PaganDating.Controllers
             var userId = 0;
             if (!string.IsNullOrEmpty(accountId))
             {
-                var db = new PaganDatingModelContainer();
-                userId = db.UserSet.FirstOrDefault(u => u.AccountId == accountId).Id;
+                try
+                {
+                    var db = new PaganDatingModelContainer();
+                    userId = db.UserSet.FirstOrDefault(u => u.AccountId == accountId).Id;
+                }
+                catch { }
             }
 
             return userId;

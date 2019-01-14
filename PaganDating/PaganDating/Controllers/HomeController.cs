@@ -17,11 +17,17 @@ namespace PaganDating.Controllers
 
         public ActionResult UserIndex()
         {
-            var db = new PaganDatingModelContainer();
-            var accountId = User.Identity.GetUserId();
-            var userModel = db.UserSet.FirstOrDefault(u => u.AccountId == accountId);
 
-            if (userModel == null && accountId != null)
+            return View();
+        }
+
+        private void ConnectAccount()
+        {
+            var userApi = new UserApiController();
+            var accountId = userApi.GetAccountId();
+            var userModel = userApi.GetUserId();
+
+            if (userModel == 0 && accountId != null)
             {
                 var newUserModel = new User
                 {
@@ -34,9 +40,6 @@ namespace PaganDating.Controllers
                 db.UserSet.Add(newUserModel);
                 db.SaveChanges();
             }
-          
-
-            return View();
         }
 
         public ActionResult Details(int? id)
@@ -56,8 +59,45 @@ namespace PaganDating.Controllers
             return View(viewModel);
         }
 
+        private List<User> ExampleUsers()
+        {
+            var userList = new List<User>();
+
+            userList.AddRange(new[]
+            {
+                new User
+                {
+                    Id = 101,
+                    Name = "Frej",
+                    Description = "No description",
+                    ProfileImage = "(Path)",
+                    AccountId = ""
+                },
+                new User
+                {
+                    Id = 102,
+                    Name = "Freja",
+                    Description = "No description",
+                    ProfileImage = "(Path)",
+                    AccountId = ""
+                },
+                new User
+                {
+                    Id = 103,
+                    Name = "Örjan",
+                    Description = "No description",
+                    ProfileImage = "(Path)",
+                    AccountId = ""
+                }
+            });
+
+            return userList;
+        }
+
         public ActionResult Index(string searchString)
         {
+            ConnectAccount();
+            
             var users = db.UserSet.ToList();
 
             if (!string.IsNullOrEmpty(searchString))

@@ -28,6 +28,7 @@
     <hr />
     <p>
         <button class="send-friend-request btn btn-default">Send friend request</button>
+        <button class="request-status">Request sent or already friends</button>
     </p>
     <hr />
 
@@ -55,27 +56,33 @@
     <hr />
     <h4>Friends</h4>
     <div id="friendlist" class="dl-horizontal">
-        @foreach (var friend in friends)
-        {
-
-            @Html.ActionLink(friend.Name, "Details", new { id = friend.Id })
-
-        }
+        <ul>
+            @foreach (var friend in friends)
+            {
+                <li>
+                    @Html.ActionLink(friend.Name, "Details", new { id = friend.Id })
+                </li>
+            }
+        </ul>
     </div>
     <hr />
     <h4 class="friend-requests">Friend requests</h4>
-    <div id="requestlist" class="dl-horizontal">
-        @{
-            foreach (var request in requests)
-            {
-                <div id="request">
-                    @Html.ActionLink(request.Name, "Details", new { id = request.Id })
+    <div class="requestlist dl-horizontal">
+        <ul>
+            @{
+                foreach (var request in requests)
+                {
+                    <li class="request">
+                        <div class="request">
+                            @Html.ActionLink(request.Name, "Details", new { id = request.Id })
 
-                    <button data-requester=@request.Id class="accept-request btn btn-default">Accept</button>
-                    <button data-requester=@request.Id class="reject-request btn btn-default">Reject</button>
-                </div>
+                            <button data-requester=@request.Id class="accept-request btn btn-default">Accept</button>
+                            <button data-requester=@request.Id class="reject-request btn btn-default">Reject</button>
+                        </div>
+                    </li>
+                }
             }
-        }
+        </ul>
     </div>
 </div>
 
@@ -88,17 +95,35 @@
         $(document).ready(function () {
             var profileOwnerId = @Model.User.Id;
             var userId = @userId;
+            @{var friendWithOwner = "false"; }
+
+            $('.request-status').hide();
 
             if (profileOwnerId == userId) {
                 $('.send-friend-request').hide();
             }
 
+            @if(Model.FriendWithProfileOwner)
+            {
+                friendWithOwner = "true";
+            }
+
+            if (@friendWithOwner) {
+                $('.send-friend-request').hide();
+                $('.request-status').show();
+                $('.request-status').prop('disabled', true).css('opacity', 0.5);
+            }
+
             if (profileOwnerId != userId) {
                 $('.friend-requests').hide();
+                $('.request-list').hide();
+                $('.request').hide();
                 $('.accept-request').hide();
                 $('.reject-request').hide();
                 $('.edit-profile').hide();
             }
+
+            
         })
 
         $('.send-friend-request').click(function () {
@@ -107,15 +132,13 @@
 
             $.get('/api/friendships/sendRequest?' +
                 'requesterId=' + requester +
-                '&recipientId=' + recipient,
-                function () {
+                '&recipientId=' + recipient, function () {
                     window.location.reload();
-                }
-            );
+                });
         });
 
         $('.accept-request').click(function () {
-            var requester = @userId;
+            var requester = $(this).data('requester');
             var recipient = @Model.User.Id;
 
             $.get('/api/friendships/acceptRequest?' +
@@ -128,7 +151,7 @@
         });
 
         $('.reject-request').click(function () {
-            var requester = @userId;
+            var requester = $(this).data('requester');
             var recipient = @Model.User.Id;
 
             $.get('/api/friendships/rejectRequest?' +
