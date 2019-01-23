@@ -17,12 +17,16 @@ namespace PaganDating.Controllers
             var db = new PaganDatingModelContainer();
             var message = new Message();
 
-            message.Content = content;
-            message.Author = db.UserSet.FirstOrDefault(a => a.Id == author);
-            message.Recipient = db.UserSet.FirstOrDefault(r => r.Id == recipient);
+            if(!string.IsNullOrEmpty(content))
+            {
+                message.Content = content;
+                message.Author = db.UserSet.FirstOrDefault(a => a.Id == author);
+                message.Recipient = db.UserSet.FirstOrDefault(r => r.Id == recipient);
 
-            db.MessageSet.Add(message);
-            db.SaveChanges();
+                db.MessageSet.Add(message);
+                db.SaveChanges();
+
+            }
         }
     }
 }

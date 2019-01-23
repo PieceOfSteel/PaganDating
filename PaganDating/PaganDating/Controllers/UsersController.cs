@@ -10,6 +10,7 @@ using DataLayer;
 using PaganDating.Models;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity.Validation;
+using System.IO;
 
 namespace PaganDating.Controllers
 {
@@ -96,6 +97,7 @@ namespace PaganDating.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 db.UserSet.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -149,6 +151,29 @@ namespace PaganDating.Controllers
                 return RedirectToAction("Details", new { id = user.Id });
             }
             return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult SetProfileImage(HttpPostedFileBase img)
+        {
+            if (img != null)
+            {
+                string imgName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(img.FileName);
+
+                string imgPath = Path.Combine(Server.MapPath("~/ProfileImages/"), imgName);
+                img.SaveAs(imgPath);
+
+                var ProfileImagePath = @"../../ProfileImages/" + imgName;
+
+                var userId = UserApi.GetUserId();
+                var user = db.UserSet.FirstOrDefault(u => u.Id == userId);
+
+                user.ProfileImage = ProfileImagePath;
+
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Edit", new { id = UserApi.GetUserId() });
         }
 
         // GET: Users/Delete/5
